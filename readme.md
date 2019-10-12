@@ -1,1 +1,1 @@
-# Object oriendted programming classes
+# Object-oriented programming classes
