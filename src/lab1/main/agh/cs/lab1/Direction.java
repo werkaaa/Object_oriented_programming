@@ -1,4 +1,4 @@
-package agh.cs.lab1;
+package main.agh.cs.lab1;
 
 enum Direction {
     FORWARD,

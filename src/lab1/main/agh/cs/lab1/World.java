@@ -1,4 +1,4 @@
-package agh.cs.lab1;
+package main.agh.cs.lab1;
 
 import java.util.Arrays;
 import static java.lang.System.out;
