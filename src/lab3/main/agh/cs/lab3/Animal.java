@@ -35,12 +35,20 @@ public class Animal {
     }
 
     public Animal(IWorldMap map) {
-        this.map = map;
+        if(!map.isOccupied(new Vector2d(2,2)))
+            this.map = map;
+        else
+            System.out.println("Pozycja (2, 2) jest zajęta! Podaj inną lokalizację zwierzaka.");
     }
 
     public Animal(IWorldMap map, Vector2d initialPosition){
-        this.map = map;
-        this.position = initialPosition;
+        if(!map.isOccupied(initialPosition)) {
+            this.map = map;
+            this.position = initialPosition;
+        }
+        else
+            System.out.println("Pozycja "+initialPosition.toString()+" jest zajęta! Podaj inną lokalizację zwierzaka.");
+
     }
 
     public MapDirection animalOrientation() {

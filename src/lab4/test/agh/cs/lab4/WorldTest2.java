@@ -59,6 +59,6 @@ public class WorldTest2 {
         assertTrue(map.isOccupied(new Vector2d(2,0)));
         assertFalse(map.isOccupied(new Vector2d(2,2)));
         assertFalse(map.isOccupied(new Vector2d(3,4)));
-        
+
     }
 }
