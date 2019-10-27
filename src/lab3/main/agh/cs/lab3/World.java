@@ -1,16 +1,16 @@
 package agh.cs.lab3;
 
 import agh.cs.lab2.MoveDirection;
+import agh.cs.lab2.Vector2d;
+import agh.cs.lab4.IWorldMap;
+import agh.cs.lab4.RectangularMap;
 
 public class World {
     public static void main(String[] args){
-        Animal animal = new Animal();
-        System.out.println(animal.toString());
-        MoveDirection directions[] = OptionParser.parse(args);
-        for(MoveDirection dir : directions){
-            animal.move(dir);
-        }
-        System.out.println(animal.toString());
-
+        MoveDirection[] directions = new OptionParser().parse(args);
+        IWorldMap map = new RectangularMap(10, 5);
+        map.place(new Animal(map));
+        map.place(new Animal(map,new Vector2d(3,4)));
+        map.run(directions);
     }
 }

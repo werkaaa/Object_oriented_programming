@@ -3,13 +3,44 @@ package agh.cs.lab3;
 import agh.cs.lab2.MapDirection;
 import agh.cs.lab2.MoveDirection;
 import agh.cs.lab2.Vector2d;
+import agh.cs.lab4.IWorldMap;
 
 public class Animal {
     private MapDirection orientation = MapDirection.NORTH;
     private Vector2d position = new Vector2d(2, 2);
+    private IWorldMap map;
+
+    public String toLongString(){
+        return "Orientation: "+orientation.toString()+" Position: "+position.toString();
+    }
 
     public String toString(){
-        return "Orientation: "+orientation.toString()+" Position: "+position.toString();
+        switch(orientation){
+            case NORTH:
+                return "^";
+            case EAST:
+                return ">";
+            case SOUTH:
+                return "v";
+            case WEST:
+                return "<";
+            default:
+                return "";
+        }
+
+    }
+
+    public Animal(){
+
+    }
+
+    public Animal(IWorldMap map) {
+        this.map = map;
+    }
+
+    public Animal(IWorldMap map, Vector2d initialPosition){
+        this.map = map;
+        this.position = initialPosition;
     }
 
     public MapDirection animalOrientation() {
@@ -30,61 +61,28 @@ public class Animal {
     }
 
     public void move(MoveDirection direction){
-        Vector2d v_0_1 = new Vector2d(0,1);
-        Vector2d v_1_0 = new Vector2d(1,0);
+        Vector2d newPosition;
 
-        if(direction==MoveDirection.RIGHT){
-            orientation = orientation.next();
+        switch(direction){
+            case RIGHT:
+                orientation = orientation.next();
+                break;
+            case LEFT:
+                orientation = orientation.previous();
+                break;
+            case FORWARD:
+                newPosition = position.add(orientation.toUnitVector());
+                if(map.canMoveTo(newPosition)){
+                    position = newPosition;
+                }
+                break;
+            case BACKWARD:
+                newPosition = position.add(orientation.toUnitVector().opposite());
+                if(map.canMoveTo(newPosition)) {
+                    position = newPosition;
+                }
+                break;
         }
-        else if(direction==MoveDirection.LEFT){
-            orientation = orientation.previous();
-        }
-        else if(direction==MoveDirection.FORWARD){
-            switch (orientation) {
-                case NORTH:
-                    if(inRange(position.add(v_0_1)))
-                        position = position.add(v_0_1);
-                    break;
-                case SOUTH:
-                    if(inRange(position.subtract(v_0_1)))
-                        position = position.subtract(v_0_1);
-                    break;
-                case WEST:
-                    if(inRange(position.subtract(v_1_0)))
-                        position = position.subtract(v_1_0);
-                    break;
-                case EAST:
-                    if(inRange(position.add(v_1_0)))
-                        position = position.add(v_1_0);
-                    break;
-                default:
-                    break;
-
-            }
-        }
-        else if(direction==MoveDirection.BACKWARD){
-            switch (orientation) {
-                case NORTH:
-                    if(inRange(position.subtract(v_0_1)))
-                        position = position.subtract(v_0_1);
-                    break;
-                case SOUTH:
-                    if(inRange(position.add(v_0_1)))
-                        position = position.add(v_0_1);
-                    break;
-                case WEST:
-                    if(inRange(position.add(v_1_0)))
-                        position = position.add(v_1_0);
-                    break;
-                case EAST:
-                    if(inRange(position.subtract(v_1_0)))
-                        position = position.subtract(v_1_0);
-                    break;
-                default:
-                    break;
-
-            }
         }
 
     }
-}
