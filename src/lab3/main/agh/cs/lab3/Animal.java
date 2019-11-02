@@ -4,16 +4,18 @@ import agh.cs.lab2.MapDirection;
 import agh.cs.lab2.MoveDirection;
 import agh.cs.lab2.Vector2d;
 import agh.cs.lab4.IWorldMap;
+import agh.cs.lab5.IMapElement;
 
-public class Animal {
-    private MapDirection orientation = MapDirection.NORTH;
-    private Vector2d position = new Vector2d(2, 2);
+public class Animal implements IMapElement{
+    private MapDirection orientation;
+    private Vector2d position;
     private IWorldMap map;
 
     public String toLongString(){
         return "Orientation: "+orientation.toString()+" Position: "+position.toString();
     }
 
+    @Override
     public String toString(){
         switch(orientation){
             case NORTH:
@@ -30,32 +32,22 @@ public class Animal {
 
     }
 
-    public Animal(){
-
-    }
-
     public Animal(IWorldMap map) {
-        if(!map.isOccupied(new Vector2d(2,2)))
-            this.map = map;
-        else
-            System.out.println("Pozycja (2, 2) jest zajęta! Podaj inną lokalizację zwierzaka.");
+        this(map, new Vector2d(2, 2));
     }
 
     public Animal(IWorldMap map, Vector2d initialPosition){
-        if(!map.isOccupied(initialPosition)) {
+            this.orientation = MapDirection.NORTH;
             this.map = map;
             this.position = initialPosition;
-        }
-        else
-            System.out.println("Pozycja "+initialPosition.toString()+" jest zajęta! Podaj inną lokalizację zwierzaka.");
-
     }
 
-    public MapDirection animalOrientation() {
+    public MapDirection getOrientation() {
         return orientation;
     }
 
-    public Vector2d animalPosition() {
+    @Override
+    public Vector2d getPosition() {
         return position;
     }
 
