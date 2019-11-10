@@ -30,7 +30,7 @@ public class OptionParser {
                     j++;
                     break;
                 default:
-                    break;
+                    throw new IllegalArgumentException(dirs[i] + " is not legal move specification");
             }
         }
         return ans;

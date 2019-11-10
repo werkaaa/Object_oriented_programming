@@ -13,6 +13,13 @@ public class Vector2d {
         return "("+this.x+","+this.y+")";
     }
 
+    public int hashCode(){
+        int hash = 13;
+        hash += this.x * 31;
+        hash += this.y * 17;
+        return hash;
+    }
+
     public boolean precedes(Vector2d other){
         return (this.x <= other.x) && (this.y <= other.y);
     }

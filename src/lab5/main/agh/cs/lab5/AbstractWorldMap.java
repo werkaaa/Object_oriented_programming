@@ -7,11 +7,15 @@ import agh.cs.lab4.IWorldMap;
 import agh.cs.lab4.MapVisualizer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractWorldMap implements IWorldMap {
-    public List<Animal> animals = new ArrayList<>();
     protected MapVisualizer visualizer = new MapVisualizer(this);
+    public Map<Vector2d, IMapElement> elements = new HashMap<>();
+
+
 
     @Override
     public boolean canMoveTo(Vector2d position) {
@@ -21,32 +25,39 @@ public abstract class AbstractWorldMap implements IWorldMap {
     @Override
     public boolean place(Animal animal) {
         if(!canMoveTo(animal.getPosition())) {
-            System.out.println("Zwierzę w złym miejscu.");
-            return false;
+            throw new IllegalArgumentException("Place " +animal.getPosition()+" is already taken or is out of border");
         }
         else{
-            this.animals.add(animal);
+            this.elements.put(animal.getPosition(), animal);
             return true;
         }
     }
 
     @Override
-    public void run(MoveDirection[] directions) {
+    public void run(MoveDirection[] directions){
+        List<Animal> animals = new ArrayList<>();
+        for(IMapElement element : elements.values()){
+            if (element instanceof Animal){
+                animals.add((Animal) element);
+            }
+        }
         int n = animals.size();
         int iter = 0;
 
         System.out.println(this);
-        for( Animal animal : this.animals) {
-            System.out.println(animal.toLongString());
-        }
+
         System.out.println("----------------------------\n");
         for(MoveDirection dir : directions){
-            this.animals.get(iter).move(dir);
+            Vector2d curr = animals.get(iter).getPosition();
+            animals.get(iter).move(dir);
+
+            if(!animals.get(iter).getPosition().equals(curr)){
+                this.elements.remove(curr);
+                this.elements.put(animals.get(iter).getPosition(), animals.get(iter));
+            }
 
             System.out.println(this);
-            for( Animal animal : this.animals) {
-                System.out.println(animal.toLongString());
-            }
+
             System.out.println("----------------------------\n");
             iter = (iter+1)%n;
         }
@@ -61,11 +72,8 @@ public abstract class AbstractWorldMap implements IWorldMap {
 
     @Override
     public Object objectAt(Vector2d position) {
-        if(this.animals!=null) {
-            for (Animal animal : animals) {
-                if (animal.getPosition().equals(position))
-                    return animal;
-            }
+        if(this.elements!=null) {
+            return this.elements.get(position);
         }
 
         return null;

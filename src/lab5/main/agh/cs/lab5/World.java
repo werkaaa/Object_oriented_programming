@@ -12,16 +12,22 @@ import java.util.List;
 
 public class World {
     public static void main(String[] args){
-        MoveDirection[] directions = new OptionParser().parse(args);
-        List<IMapElement> rocks = new ArrayList<>();
-        rocks.add(new Rock(new Vector2d(-4, -4)));
-        rocks.add(new Rock(new Vector2d(7, 7)));
-        rocks.add(new Rock(new Vector2d(3, 6)));
-        rocks.add(new Rock(new Vector2d(2, 0)));
-        IWorldMap map = new UnboundedMap(rocks);
-        System.out.println(map.toString());
-        //map.place(new Animal(map));
-        map.place(new Animal(map,new Vector2d(3,4)));
-        map.run(directions);
+        try {
+            MoveDirection[] directions = new OptionParser().parse(args);
+            List<Rock> rocks = new ArrayList<>();
+            rocks.add(new Rock(new Vector2d(-4, -4)));
+            rocks.add(new Rock(new Vector2d(7, 7)));
+            rocks.add(new Rock(new Vector2d(3, 6)));
+            rocks.add(new Rock(new Vector2d(2, 0)));
+            IWorldMap map = new UnboundedMap(rocks);
+            System.out.println(map.toString());
+            //map.place(new Animal(map));
+            map.place(new Animal(map, new Vector2d(3, 4)));
+            map.place(new Animal(map, new Vector2d(0, 5)));
+            map.run(directions);
+        }
+        catch(IllegalArgumentException ex){
+            System.out.println(ex);
+        }
     }
 }
