@@ -5,13 +5,14 @@ import agh.cs.lab2.Vector2d;
 import agh.cs.lab3.Animal;
 import agh.cs.lab4.IWorldMap;
 import agh.cs.lab4.MapVisualizer;
+import agh.cs.lab7.IPositionChangeObserver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractWorldMap implements IWorldMap {
+public abstract class AbstractWorldMap implements IWorldMap, IPositionChangeObserver {
     protected MapVisualizer visualizer = new MapVisualizer(this);
     public Map<Vector2d, IMapElement> elements = new HashMap<>();
 
@@ -29,6 +30,7 @@ public abstract class AbstractWorldMap implements IWorldMap {
         }
         else{
             this.elements.put(animal.getPosition(), animal);
+            animal.addObserver(this);
             return true;
         }
     }
@@ -51,13 +53,7 @@ public abstract class AbstractWorldMap implements IWorldMap {
             Vector2d curr = animals.get(iter).getPosition();
             animals.get(iter).move(dir);
 
-            if(!animals.get(iter).getPosition().equals(curr)){
-                this.elements.remove(curr);
-                this.elements.put(animals.get(iter).getPosition(), animals.get(iter));
-            }
-
             System.out.println(this);
-
             System.out.println("----------------------------\n");
             iter = (iter+1)%n;
         }
@@ -78,5 +74,13 @@ public abstract class AbstractWorldMap implements IWorldMap {
 
         return null;
     }
+
+    @Override
+    public void positionChanged(Vector2d oldPosition, Vector2d newPosition) {
+        Animal animal = (Animal) this.elements.remove(oldPosition);
+        this.elements.put(newPosition, animal);
+    }
+
+
 
 }

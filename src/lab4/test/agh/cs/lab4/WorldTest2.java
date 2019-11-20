@@ -82,7 +82,7 @@ public class WorldTest2 {
         assertFalse(map.isOccupied(new Vector2d(2,2)));
         assertFalse(map.isOccupied(new Vector2d(3,3)));
 
-       
+
 
     }
 }

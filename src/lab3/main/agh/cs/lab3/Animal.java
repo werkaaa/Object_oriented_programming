@@ -5,11 +5,17 @@ import agh.cs.lab2.MoveDirection;
 import agh.cs.lab2.Vector2d;
 import agh.cs.lab4.IWorldMap;
 import agh.cs.lab5.IMapElement;
+import agh.cs.lab7.IPositionChangeObserver;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Animal implements IMapElement{
     private MapDirection orientation;
     private Vector2d position;
     private IWorldMap map;
+
+    private List<IPositionChangeObserver> observers = new ArrayList<>();
 
     public String toLongString(){
         return "Orientation: "+orientation.toString()+" Position: "+position.toString();
@@ -73,16 +79,32 @@ public class Animal implements IMapElement{
             case FORWARD:
                 newPosition = position.add(orientation.toUnitVector());
                 if(map.canMoveTo(newPosition)){
+                    this.positionChanged(position, newPosition);
                     position = newPosition;
                 }
                 break;
             case BACKWARD:
                 newPosition = position.add(orientation.toUnitVector().opposite());
                 if(map.canMoveTo(newPosition)) {
+                    this.positionChanged(position, newPosition);
                     position = newPosition;
                 }
                 break;
         }
+        }
+
+        public void addObserver(IPositionChangeObserver observer){
+            this.observers.add(observer);
+        }
+
+        private void removeObserver(IPositionChangeObserver observer){
+            this.observers.remove(observer);
+        }
+
+        private void positionChanged(Vector2d oldPosition, Vector2d newPosition){
+            for(IPositionChangeObserver observer : this.observers){
+                observer.positionChanged(oldPosition, newPosition);
+            }
         }
 
     }
